@@ -1,0 +1,19 @@
+Concept Pair,Cosine Similarity,Euclidean Distance,Relationship Type
+"(good, evil)",0.286784,7.5007963,Neutral/Unrelated
+"(order, chaos)",0.30821604,7.220891,Mildly Related
+"(old, new)",0.36769307,7.353618,Mildly Related
+"(science, religion)",0.3888362,7.6240926,Mildly Related
+"(wealth, happiness)",0.40673745,6.9564323,Mildly Related
+"(rich, poor)",0.4133756,7.228738,Mildly Related
+"(simple, complex)",0.42208624,6.6702037,Mildly Related
+"(war, peace)",0.4488757,7.864216,Mildly Related
+"(love, hate)",0.45296258,6.36763,Mildly Related
+"(hot, cold)",0.50937515,6.6638246,Mildly Related
+"(strength, weakness)",0.5228582,6.0491395,Mildly Related
+"(life, death)",0.5232321,6.0709453,Mildly Related
+"(open, closed)",0.52940226,6.3682785,Mildly Related
+"(light, dark)",0.5300682,6.3261337,Mildly Related
+"(happy, sad)",0.5652858,5.494808,Mildly Related
+"(strong, weak)",0.62324786,5.398637,Strongly Related
+"(fast, slow)",0.65842795,5.1491923,Strongly Related
+"(man, woman)",0.6998663,4.7539396,Strongly Related
