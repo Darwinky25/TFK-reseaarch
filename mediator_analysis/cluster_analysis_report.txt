@@ -1,0 +1,87 @@
+=== Mediator Cluster Analysis Report ===
+
+## Cluster Summaries
+
+### Cluster 0 (14 concepts)
+  - Most central concepts: truth, faith, fact
+  - All concepts: belief, fact, freedom, change, religion, truth, faith, nature, mercy, intuition, individualism, tradition, reason, justice
+
+### Cluster 1 (1 concepts)
+  - Most central concepts: discipline
+  - All concepts: discipline
+
+### Cluster 2 (4 concepts)
+  - Most central concepts: security, risk, privacy
+  - All concepts: privacy, risk, security, safety
+
+### Cluster 3 (4 concepts)
+  - Most central concepts: emotion, passion, desire
+  - All concepts: loyalty, passion, emotion, desire
+
+### Cluster 4 (12 concepts)
+  - Most central concepts: progress, science, competition
+  - All concepts: pleasure, preservation, collectivism, technology, equality, progress, stability, duty, innovation, cooperation, science, competition
+
+## Contradiction Analysis by Cluster Pairs
+
+### Cluster 0 vs Cluster 2
+  - Number of contradictions: 1.0
+  - Average influence score: 0.82
+  - Average stability score: 0.68
+  - Example contradictions:
+     - freedom vs security (Influence: 0.82, Stability: 0.68)
+
+### Cluster 0 vs Cluster 3
+  - Number of contradictions: 3.0
+  - Average influence score: 0.81
+  - Average stability score: 0.75
+  - Example contradictions:
+     - emotion vs reason (Influence: 0.84, Stability: 0.71)
+     - passion vs reason (Influence: 0.81, Stability: 0.73)
+     - truth vs loyalty (Influence: 0.79, Stability: 0.82)
+
+### Cluster 3 vs Cluster 4
+  - Number of contradictions: 1.0
+  - Average influence score: 0.80
+  - Average stability score: 0.76
+  - Example contradictions:
+     - desire vs duty (Influence: 0.80, Stability: 0.76)
+
+### Cluster 0 vs Cluster 4
+  - Number of contradictions: 6.0
+  - Average influence score: 0.78
+  - Average stability score: 0.77
+  - Example contradictions:
+     - freedom vs equality (Influence: 0.86, Stability: 0.69)
+     - innovation vs tradition (Influence: 0.85, Stability: 0.72)
+     - science vs religion (Influence: 0.83, Stability: 0.81)
+
+### Cluster 1 vs Cluster 4
+  - Number of contradictions: 1.0
+  - Average influence score: 0.77
+  - Average stability score: 0.78
+  - Example contradictions:
+     - pleasure vs discipline (Influence: 0.77, Stability: 0.78)
+
+## Most Influential Contradictions by Cluster
+
+### Cluster 0 Contradictions
+  - fact vs belief (Influence: 0.89, Stability: 0.70)
+  - reason vs intuition (Influence: 0.88, Stability: 0.65)
+  - freedom vs equality (Influence: 0.86, Stability: 0.69)
+
+### Cluster 2 Contradictions
+  - freedom vs security (Influence: 0.82, Stability: 0.68)
+  - privacy vs security (Influence: 0.82, Stability: 0.74)
+  - risk vs safety (Influence: 0.73, Stability: 0.84)
+
+### Cluster 3 Contradictions
+  - emotion vs reason (Influence: 0.84, Stability: 0.71)
+  - passion vs reason (Influence: 0.81, Stability: 0.73)
+  - desire vs duty (Influence: 0.80, Stability: 0.76)
+
+### Cluster 4 Contradictions
+  - freedom vs equality (Influence: 0.86, Stability: 0.69)
+  - innovation vs tradition (Influence: 0.85, Stability: 0.72)
+  - science vs religion (Influence: 0.83, Stability: 0.81)
+
