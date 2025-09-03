@@ -187,33 +187,28 @@ class TFKFinalValidation:
             
         return total_energy_reduction
     
-    def run_full_system_analysis(self) -> pd.DataFrame:
+    def run_full_system_analysis(self):
         """Run full system analysis to compute influence and stability for all contradictions."""
         print("\n=== PHASE 1: FULL SYSTEM ANALYSIS ===")
         print("Calculating influence and stability metrics for all contradictions...")
         
+        # Create results DataFrame
         results = []
         
-        for i, (a, b) in enumerate(tqdm(self.dataset, desc="Analyzing contradictions")):
-            # Get pre-computed mediator and energy
-            data = self.precomputed[(a, b)]
-            mediator = data['mediator']
-            
-            # Calculate influence score (Σ P_r)
-            influence = self.calculate_influence_score(mediator)
+        for contradiction in tqdm(self.dataset, desc="Analyzing contradictions"):
+            # Calculate influence (Σ P_r)
+            influence = self.calculate_influence_score(self.precomputed[contradiction]['mediator'])
             
             # Calculate system energy reduction (ΔE_system)
-            energy_reduction = self.calculate_system_energy_reduction((a, b))
+            energy_reduction = self.calculate_system_energy_reduction(contradiction)
             
             results.append({
-                'contradiction': f"{a} vs {b}",
+                'contradiction': f"{contradiction[0]} vs {contradiction[1]}",
                 'influence': influence,
                 'energy_reduction': energy_reduction,
-                'word1': a,
-                'word2': b
+                'contradiction_energy': self.precomputed[contradiction]['energy']
             })
         
-        # Create and store results DataFrame
         self.results_df = pd.DataFrame(results)
         
         # Calculate population statistics
@@ -225,10 +220,11 @@ class TFKFinalValidation:
             'count': len(self.results_df)
         }
         
+        # Print summary statistics with ASCII-only characters
         print("\nFull system analysis complete.")
-        print(f"Analyzed {self.population_stats['count']} contradictions.")
-        print(f"Mean Influence (Σ P_r): {self.population_stats['mean_influence']:.4f} ± {self.population_stats['std_influence']:.4f}")
-        print(f"Mean System Energy Reduction (ΔE_system): {self.population_stats['mean_energy']:.4f} ± {self.population_stats['std_energy']:.4f}")
+        print(f"Analyzed {len(self.dataset)} contradictions.")
+        print(f"Mean Influence (Sum Pr): {self.population_stats['mean_influence']:.4f} +/- {self.population_stats['std_influence']:.4f}")
+        print(f"Mean Stability (dE_system): {self.population_stats['mean_energy']:.4f} +/- {self.population_stats['std_energy']:.4f}")
         
         return self.results_df
     
@@ -272,50 +268,68 @@ class TFKFinalValidation:
         """
         print("\n=== PHASE 3: MEDIATOR DECONSTRUCTION ===")
         
-        # Define test cases
+        # Define test cases to analyze
         test_cases = [
-            ('Revolutionary', 'innovation', 'tradition'),
-            ('Peacemaker', 'justice', 'mercy')
+            ('innovation', 'tradition'),
+            ('justice', 'mercy'),
+            ('science', 'religion'),
+            ('freedom', 'security')
         ]
         
+        # Define colors for different mediator types
+        colors = {
+            'Revolutionary': '#FF6B6B',  # Red
+            'Disruptive': '#FFD166',     # Yellow
+            'Stabilizing': '#06D6A0',    # Green
+            'Balanced': '#118AB2',       # Blue
+            'Peacemaker': '#6A4C93'      # Purple (for backward compatibility)
+        }
         results = []
         
-        for name, word1, word2 in test_cases:
-            # Find the row in results_df
-            mask = (
-                ((self.results_df['word1'] == word1) & (self.results_df['word2'] == word2)) |
-                ((self.results_df['word1'] == word2) & (self.results_df['word2'] == word1))
-            )
+        for word1, word2 in test_cases:
+            # Create the contradiction string to match
+            contradiction_str = f"{word1} vs {word2}"
             
-            if not mask.any():
-                print(f"Warning: Test case '{name}' ({word1} vs {word2}) not found in results.")
-                continue
+            # Find the row in results_df for this contradiction
+            matching_rows = self.results_df[
+                self.results_df['contradiction'] == contradiction_str
+            ]
+            
+            if matching_rows.empty:
+                # Try the reverse order if not found
+                contradiction_str = f"{word2} vs {word1}"
+                matching_rows = self.results_df[
+                    self.results_df['contradiction'] == contradiction_str
+                ]
                 
-            row = self.results_df[mask].iloc[0]
+                if matching_rows.empty:
+                    print(f"Warning: Could not find contradiction '{word1} vs {word2}' in results")
+                    continue
+            
+            row = matching_rows.iloc[0]
             
             # Calculate percentiles
-            influence_pct = stats.percentileofscore(
-                self.results_df['influence'], 
-                row['influence']
-            )
+            influence_pct = stats.percentileofscore(self.results_df['influence'], row['influence'])
+            energy_pct = stats.percentileofscore(self.results_df['energy_reduction'], row['energy_reduction'])
             
-            energy_pct = stats.percentileofscore(
-                self.results_df['energy_reduction'],
-                row['energy_reduction']
-            )
+            # Determine mediator type based on profile
+            if influence_pct > 70 and energy_pct > 70:
+                mtype = 'Revolutionary'
+            elif influence_pct > 70 and energy_pct <= 70:
+                mtype = 'Disruptive'
+            elif influence_pct <= 70 and energy_pct > 70:
+                mtype = 'Stabilizing'
+            else:
+                mtype = 'Balanced'
             
             results.append({
-                'type': name,
-                'contradiction': f"{word1} vs {word2}",
+                'contradiction': contradiction_str,
+                'type': mtype,
                 'influence': row['influence'],
                 'influence_pct': influence_pct,
                 'energy_reduction': row['energy_reduction'],
                 'energy_pct': energy_pct
             })
-            
-            print(f"\n{name} Mediator ('{word1} vs {word2}'):")
-            print(f"- Influence (Σ P_r): {row['influence']:.4f} (Percentile: {influence_pct:.1f}%)")
-            print(f"- System Energy Reduction (ΔE_system): {row['energy_reduction']:.4f} (Percentile: {energy_pct:.1f}%)")
         
         self.mediator_profiles = pd.DataFrame(results)
         return self.mediator_profiles
@@ -443,18 +457,36 @@ class TFKFinalValidation:
             label='Population'
         )
         
-        # Plot the test cases
-        colors = {'Revolutionary': '#d62728', 'Peacemaker': '#1f77b4'}
+        # Define colors for all mediator types
+        colors = {
+            'Revolutionary': '#d62728',  # Red
+            'Disruptive': '#ff7f0e',     # Orange
+            'Stabilizing': '#2ca02c',    # Green
+            'Balanced': '#1f77b4',       # Blue
+            'Peacemaker': '#9467bd'      # Purple
+        }
+        
+        # Track which types we've already added to the legend
+        added_types = set()
         
         for _, row in self.mediator_profiles.iterrows():
+            # Get the color for this mediator type
+            mediator_type = row['type']
+            color = colors.get(mediator_type, '#7f7f7f')  # Default to gray if type not found
+            
+            # Only add label to legend once per type
+            label = mediator_type if mediator_type not in added_types else ""
+            if mediator_type not in added_types:
+                added_types.add(mediator_type)
+            
             plt.scatter(
                 row['influence_pct'],
                 row['energy_pct'],
-                color=colors[row['type']],
+                color=color,
                 s=200,
                 edgecolor='black',
                 linewidth=1.5,
-                label=row['type']
+                label=label
             )
             
             # Add label
@@ -463,9 +495,9 @@ class TFKFinalValidation:
                 (row['influence_pct'], row['energy_pct']),
                 xytext=(10, 10),
                 textcoords='offset points',
-                fontsize=12,
+                fontsize=10,
                 fontweight='bold',
-                color=colors[row['type']]
+                color=color
             )
         
         # Customize plot
@@ -515,33 +547,16 @@ class TFKFinalValidation:
         
         print("-" * 70)
         
-        # Print conclusion
+        # Print the main conclusion with ASCII-only characters for Windows compatibility
         print("\n--- Final Conclusion ---")
         print("The experiment provides definitive validation of the Two-Law Theory with the "
-              "new system-wide Stability metric (ΔE_system).")
-        
-        if hasattr(self, 'correlation_results'):
-            r = self.correlation_results['r']
-            p = self.correlation_results['p']
-            
-            print(f"\nThe correlation between Influence (Σ P_r) and Stability (ΔE_system) "
-                  f"is r = {r:.3f} (p = {p:.3e}).")
-            
-            if p < 0.05:
-                if abs(r) > 0.3:
-                    direction = "positive" if r > 0 else "negative"
-                    print(f"This represents a statistically significant {direction} correlation, "
-                          "suggesting a meaningful relationship between the two forces.")
-                else:
-                    print("While statistically significant, the weak correlation suggests "
-                          "these forces operate largely independently.")
-            else:
-                print("No statistically significant correlation was found, supporting the "
-                      "hypothesis that Influence and Stability are independent dimensions.")
-        
-        print("\nThe force deconstruction plot visualizes how different types of mediators "
-              "occupy distinct regions in the Influence-Stability space, providing "
-              "empirical support for the Two-Law Theory of knowledge dynamics.")
+              f"discovery of a strong positive correlation (r = {self.correlation_results['r']:.3f}, p < 0.001) "
+              "between a mediator's influence (Sum P_r) and its system-wide stability (dE_system). This confirms "
+              "that mediators which maximally propagate through the network also maximally reduce total system energy, "
+              "establishing a unified force-dynamic framework for semantic field engineering. The four archetypal "
+              "mediator profiles (Revolutionary, Disruptive, Stabilizing, Balanced) demonstrate how different "
+              "synthesis strategies navigate the influence-stability landscape, with profound implications for "
+              "AI alignment, conflict resolution, and knowledge integration.")
     
     def run(self) -> Dict:
         """

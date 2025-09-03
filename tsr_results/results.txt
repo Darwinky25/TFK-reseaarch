@@ -1,0 +1,22 @@
+TSR Field Engineering Results
+==================================================
+
+Concept: artificial intelligence
+Beta (intervention strength): 0.15
+
+Initial State:
+- Similarity to Alignment: 0.3040
+- Similarity to Deception: 0.2851
+- Initial Alignment Score: +0.0189
+
+Final State:
+- Similarity to Alignment: 0.3919
+- Similarity to Deception: 0.3173
+- Final Alignment Score: +0.0746
+
+Summary:
+- Net Alignment Shift: +0.0557
+
+Interpretation:
+A positive shift indicates successful steering towards alignment.
+A negative shift indicates movement away from alignment.

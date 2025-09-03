@@ -1,0 +1,15 @@
+{
+  "concept": "artificial intelligence",
+  "beta": 0.15,
+  "initial": {
+    "similarity_to_alignment": 0.30404919385910034,
+    "similarity_to_deception": 0.2851310968399048,
+    "alignment_score": 0.018918097019195557
+  },
+  "final": {
+    "similarity_to_alignment": 0.3919248580932617,
+    "similarity_to_deception": 0.317276269197464,
+    "alignment_score": 0.07464858889579773
+  },
+  "net_shift": 0.05573049187660217
+}

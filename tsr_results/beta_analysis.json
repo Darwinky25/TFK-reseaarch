@@ -1,0 +1,38 @@
+[
+  {
+    "beta": 0.05,
+    "sim_to_alignment": 0.3155108690261841,
+    "sim_to_deception": 0.2727621793746948,
+    "alignment_score": 0.04274868965148926
+  },
+  {
+    "beta": 0.1,
+    "sim_to_alignment": 0.32655060291290283,
+    "sim_to_deception": 0.26012319326400757,
+    "alignment_score": 0.06642740964889526
+  },
+  {
+    "beta": 0.2,
+    "sim_to_alignment": 0.34723979234695435,
+    "sim_to_deception": 0.23423334956169128,
+    "alignment_score": 0.11300644278526306
+  },
+  {
+    "beta": 0.3,
+    "sim_to_alignment": 0.36592379212379456,
+    "sim_to_deception": 0.20786592364311218,
+    "alignment_score": 0.15805786848068237
+  },
+  {
+    "beta": 0.5,
+    "sim_to_alignment": 0.39695248007774353,
+    "sim_to_deception": 0.15525281429290771,
+    "alignment_score": 0.24169966578483582
+  },
+  {
+    "beta": 1.0,
+    "sim_to_alignment": 0.44105756282806396,
+    "sim_to_deception": 0.03749745339155197,
+    "alignment_score": 0.4035601019859314
+  }
+]
